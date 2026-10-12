@@ -4,8 +4,23 @@ version = "0.1.0"
 description = "iVenue backend API"
 requires-python = ">=3.12"
 dependencies = [
-    "fastapi==0.115.0",
+    "aiosqlite>=0.22.1",
+    "alembic>=1.18.5",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.115",
+    "geoalchemy2>=0.20.0",
+    "greenlet>=3.5.3",
+    "httpx>=0.28.1",
+    "psycopg[binary]>=3.3.4",
+    "pydantic[email]>=2.13.4",
+    "pydantic-settings>=2.14.2",
+    "redis>=8.0.1",
+    "sqlalchemy[asyncio]>=2.0.51",
     "uvicorn[standard]==0.32.0",
+    "jinja2>=3.1.6",
+    "pyjwt>=2.15.1",
+    "python-multipart>=0.0.32",
+    "pwdlib[argon2]>=0.3.1",
 ]
 
 [build-system]
@@ -14,3 +29,14 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 package = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+]
