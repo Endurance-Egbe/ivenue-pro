@@ -6,7 +6,7 @@ import { BrandPanel } from '../components/BrandPanel';
 import { usePasswordAuthFlow } from '../hooks/usePasswordAuthFlow';
 import { SessionResponse } from '../../../lib/api';
 
-export function AuthScreen({ onAuthenticated }: { onAuthenticated: (session: SessionResponse) => void }) {
+export function AuthScreen({ onBack, onAuthenticated }: { onBack: () => void; onAuthenticated: (session: SessionResponse) => void }) {
   const { width } = useWindowDimensions();
   const isPhoneLayout = width < 768;
 
@@ -22,7 +22,7 @@ export function AuthScreen({ onAuthenticated }: { onAuthenticated: (session: Ses
               <Text style={styles.mobileBrandName}>iVenue</Text>
             </View>
           ) : <BrandPanel />}
-          <PasswordAuthForm {...auth.state} onModeChange={auth.setMode} onChange={auth.update} onSubmit={auth.submit} />
+          <PasswordAuthForm {...auth.state} onBack={onBack} onModeChange={auth.setMode} onChange={auth.update} onSocialPress={auth.socialPress} onSubmit={auth.submit} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

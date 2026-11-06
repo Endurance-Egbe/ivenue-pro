@@ -1,4 +1,9 @@
 import asyncio
+import sys
+from pathlib import Path
+
+# Allow `python scripts/seed_admin.py` from the backend directory.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sqlalchemy import select
 from pwdlib import PasswordHash
@@ -34,7 +39,7 @@ async def seed_admin() -> None:
             user.is_verified = True
         await session.commit()
 
-    print(f"Seeded {role} account for {email}. The account can now sign in with phone OTP.")
+    print(f"Seeded {role} account for {email}. The account can now sign in with email and password.")
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ type PasswordAuthState = {
 };
 
 export function usePasswordAuthFlow(onAuthenticated: (session: SessionResponse) => void) {
-  const [state, setState] = useState<PasswordAuthState>({ mode: 'signup', fullName: '', email: '', password: '', role: 'customer', error: '' });
+  const [state, setState] = useState<PasswordAuthState>({ mode: 'signin', fullName: '', email: '', password: '', role: 'customer', error: '' });
 
   const update = (field: keyof PasswordAuthState, value: string) => setState((current) => ({ ...current, [field]: value, error: '' }));
   const setMode = (mode: AuthMode) => setState((current) => ({ ...current, mode, error: '' }));
@@ -22,7 +22,7 @@ export function usePasswordAuthFlow(onAuthenticated: (session: SessionResponse) 
   const submit = async () => {
     try {
       if (state.mode === 'signup') {
-        const session = await authApi.signupWithPassword(state.fullName, state.email, state.password, state.role);
+        const session = await authApi.signupWithPassword(state.fullName, state.email, state.password, 'customer');
         onAuthenticated(session);
       } else {
         const session = await authApi.signinWithPassword(state.email, state.password);
@@ -33,5 +33,9 @@ export function usePasswordAuthFlow(onAuthenticated: (session: SessionResponse) 
     }
   };
 
-  return { state, update, setMode, submit };
+  const socialPress = (provider: 'Google' | 'Facebook' | 'X') => {
+    setState((current) => ({ ...current, error: `${provider} sign-in will be available when the secure provider connection is configured.` }));
+  };
+
+  return { state, update, setMode, submit, socialPress };
 }

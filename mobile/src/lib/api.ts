@@ -1,7 +1,11 @@
 import { Platform } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 
-const apiBaseUrl = process.env.EXPO_PUBLIC_API_URL ?? Platform.select({
+const configuredApiUrl = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, '');
+const browserApiUrl = Platform.OS === 'web' && typeof window !== 'undefined'
+  ? `${window.location.protocol}//${window.location.hostname}:8000`
+  : undefined;
+const apiBaseUrl = browserApiUrl ?? configuredApiUrl ?? Platform.select({
   android: 'http://10.0.2.2:8000',
   default: 'http://127.0.0.1:8000',
 })!;

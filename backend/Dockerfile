@@ -17,11 +17,10 @@ RUN uv sync --no-dev
 
 FROM base AS development
 
-COPY main.py ./main.py
 COPY app ./app
 
 EXPOSE 8000
 
 VOLUME ["/app"]
 
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

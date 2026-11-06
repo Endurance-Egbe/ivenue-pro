@@ -4,7 +4,6 @@ import {
   Image,
   Platform,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,7 +18,7 @@ import { colors } from '../../../theme/colors';
 
 const venueTypes = ['All', 'Rooftops', 'Ballrooms', 'Gardens', 'Studios', 'Waterfront'];
 
-export function BrowseScreen() {
+export function BrowseScreen({ onSignIn, onProfile }: { onSignIn: () => void; onProfile: () => void }) {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [selectedType, setSelectedType] = useState('All');
   const [location, setLocation] = useState('');
@@ -58,14 +57,14 @@ export function BrowseScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <View style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topBar}>
           <View style={styles.brandRow}>
             <View style={styles.logo}><Text style={styles.logoText}>iV</Text></View>
             <Text style={styles.brandName}>iVenue</Text>
           </View>
-          <Pressable accessibilityLabel="Open profile" style={styles.avatar}><Text style={styles.avatarText}>E</Text></Pressable>
+          <Pressable accessibilityLabel="Open profile" onPress={onProfile} style={styles.avatar}><Text style={styles.avatarText}>U</Text></Pressable>
         </View>
 
         <View style={styles.greetingRow}>
@@ -100,8 +99,12 @@ export function BrowseScreen() {
 
         <View style={[styles.sectionHeader, styles.featuredHeader]}><View><Text style={styles.sectionTitle}>Featured spaces</Text><Text style={styles.sectionSubtitle}>Handpicked for your next event</Text></View><Text style={styles.seeAll}>{venues.length} spaces</Text></View>
         {loading ? <ActivityIndicator color={colors.accent} style={styles.loader} /> : error ? <View style={styles.message}><Text style={styles.messageTitle}>We couldn&apos;t load venues</Text><Text style={styles.messageText}>{error}</Text></View> : visibleVenues.length === 0 ? <View style={styles.message}><Text style={styles.messageTitle}>No spaces yet</Text><Text style={styles.messageText}>Published host venues will appear here.</Text></View> : visibleVenues.map((venue) => <VenueCard key={venue.id} venue={venue} />)}
+        <View style={styles.signInPrompt}>
+          <View style={styles.signInCopy}><Text style={styles.signInTitle}>Ready to make it yours?</Text><Text style={styles.signInText}>Sign in to save spaces, manage bookings, or apply to host.</Text></View>
+          <Pressable accessibilityRole="button" onPress={onSignIn} style={styles.signInButton}><Text style={styles.signInButtonText}>Sign in</Text></Pressable>
+        </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -123,7 +126,7 @@ function VenueCard({ venue }: { venue: Venue }) {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: colors.paper },
+  safeArea: { flex: 1, backgroundColor: colors.paper, paddingTop: Platform.OS === 'android' ? 24 : Platform.OS === 'ios' ? 12 : 0 },
   content: { paddingHorizontal: 20, paddingBottom: 32 },
   topBar: { height: 58, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 9 },
@@ -163,6 +166,12 @@ const styles = StyleSheet.create({
   message: { backgroundColor: colors.surface, borderRadius: 14, padding: 18, borderWidth: 1, borderColor: colors.line },
   messageTitle: { color: colors.ink, fontSize: 15, fontWeight: '700' },
   messageText: { color: '#786f66', fontSize: 13, lineHeight: 19, marginTop: 6 },
+  signInPrompt: { flexDirection: 'row', alignItems: 'center', backgroundColor: colors.ink, borderRadius: 16, padding: 16, marginTop: 8, marginBottom: 16 },
+  signInCopy: { flex: 1, paddingRight: 12 },
+  signInTitle: { color: colors.surface, fontSize: 15, fontWeight: '700' },
+  signInText: { color: '#cfc4b9', fontSize: 12, lineHeight: 17, marginTop: 4 },
+  signInButton: { backgroundColor: colors.accent, borderRadius: 11, paddingHorizontal: 15, paddingVertical: 11 },
+  signInButtonText: { color: colors.surface, fontSize: 13, fontWeight: '700' },
   venueCard: { backgroundColor: colors.surface, borderRadius: 16, overflow: 'hidden', borderColor: colors.line, borderWidth: 1, marginBottom: 16 },
   venueImage: { width: '100%', height: 170, backgroundColor: '#e9e0d5' },
   imagePlaceholder: { alignItems: 'center', justifyContent: 'center' },
